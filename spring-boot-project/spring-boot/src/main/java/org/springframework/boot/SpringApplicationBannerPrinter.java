@@ -36,14 +36,26 @@ import org.springframework.util.StringUtils;
  */
 class SpringApplicationBannerPrinter {
 
+	/**
+	 * 横幅位置属性
+	 */
 	static final String BANNER_LOCATION_PROPERTY = "spring.banner.location";
 
+	/**
+	 * 横幅图片属性
+	 */
 	static final String BANNER_IMAGE_LOCATION_PROPERTY = "spring.banner.image.location";
 
+	/**
+	 * 默认的横幅text
+	 */
 	static final String DEFAULT_BANNER_LOCATION = "banner.txt";
 
 	static final String[] IMAGE_EXTENSION = { "gif", "jpg", "png" };
 
+	/**
+	 * 默认横幅
+	 */
 	private static final Banner DEFAULT_BANNER = new SpringBootBanner();
 
 	private final ResourceLoader resourceLoader;
@@ -55,6 +67,13 @@ class SpringApplicationBannerPrinter {
 		this.fallbackBanner = fallbackBanner;
 	}
 
+	/**
+	 * 打印横幅
+	 * @param environment
+	 * @param sourceClass
+	 * @param logger
+	 * @return
+	 */
 	public Banner print(Environment environment, Class<?> sourceClass, Log logger) {
 		Banner banner = getBanner(environment);
 		try {
@@ -110,6 +129,14 @@ class SpringApplicationBannerPrinter {
 		return null;
 	}
 
+	/**
+	 * 根据环境和应用主类,打印横幅
+	 * @param banner
+	 * @param environment
+	 * @param mainApplicationClass
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
 	private String createStringFromBanner(Banner banner, Environment environment,
 			Class<?> mainApplicationClass) throws UnsupportedEncodingException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
