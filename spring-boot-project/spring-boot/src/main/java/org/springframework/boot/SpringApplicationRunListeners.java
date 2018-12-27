@@ -28,7 +28,7 @@ import org.springframework.util.ReflectionUtils;
 
 /**
  * A collection of {@link SpringApplicationRunListener}.
- *
+ * spring应用运行监听器集
  * @author Phillip Webb
  */
 class SpringApplicationRunListeners {

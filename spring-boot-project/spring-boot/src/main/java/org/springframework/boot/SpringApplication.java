@@ -203,6 +203,10 @@ public class SpringApplication {
 	 */
 	public static final String BANNER_LOCATION_PROPERTY = SpringApplicationBannerPrinter.BANNER_LOCATION_PROPERTY;
 
+	/**
+	 * Headless模式是在缺少显示屏、键盘或者鼠标是的系统配置。在java.awt.toolkit和java.awt.graphicsenvironment类中有许多方法，
+	 * 除了对字体、图形和打印的操作外还可以调用显示器、键盘和鼠标的方法。但是有一些类中，比如Canvas和Panel，可以在headless模式下执行。
+	 */
 	private static final String SYSTEM_PROPERTY_JAVA_AWT_HEADLESS = "java.awt.headless";
 
 	private static final Log logger = LogFactory.getLog(SpringApplication.class);
@@ -223,10 +227,19 @@ public class SpringApplication {
 
 	private boolean logStartupInfo = true;
 
+	/**
+	 * 是否添加命令行属性到环境
+	 */
 	private boolean addCommandLineProperties = true;
 
+	/**
+	 * 是否添加类型约束服务
+	 */
 	private boolean addConversionService = true;
 
+	/**
+	 * 应用横幅
+	 */
 	private Banner banner;
 
 	private ResourceLoader resourceLoader;
@@ -239,6 +252,10 @@ public class SpringApplication {
 
 	private WebApplicationType webApplicationType;
 
+	/**
+	 * Headless模式是在缺少显示屏、键盘或者鼠标是的系统配置。在java.awt.toolkit和java.awt.graphicsenvironment类中有许多方法，
+	 * 除了对字体、图形和打印的操作外还可以调用显示器、键盘和鼠标的方法。但是有一些类中，比如Canvas和Panel，可以在headless模式下执行。
+	 */
 	private boolean headless = true;
 
 	private boolean registerShutdownHook = true;
@@ -259,6 +276,9 @@ public class SpringApplication {
 
 	private boolean allowBeanDefinitionOverriding;
 
+	/**
+	 *
+	 */
 	private boolean isCustomEnvironment = false;
 
 	/**
@@ -346,34 +366,50 @@ public class SpringApplication {
 	 * @return a running {@link ApplicationContext}
 	 */
 	public ConfigurableApplicationContext run(String... args) {
+		//创建任务观察器
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		ConfigurableApplicationContext context = null;
 		Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
+		//配置HeadLess属性
 		configureHeadlessProperty();
+		//解析应用运行监听器
 		SpringApplicationRunListeners listeners = getRunListeners(args);
+		//启动应用监听器
 		listeners.starting();
 		try {
+			//包装应用参数
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(
 					args);
+			//准备环境
 			ConfigurableEnvironment environment = prepareEnvironment(listeners,
 					applicationArguments);
+			//配置内省bean忽略属性
 			configureIgnoreBeanInfo(environment);
+			//打印应用横幅
 			Banner printedBanner = printBanner(environment);
+			//创建应用上下文
 			context = createApplicationContext();
+			//获取应用启动异常报告器
 			exceptionReporters = getSpringFactoriesInstances(
 					SpringBootExceptionReporter.class,
 					new Class[] { ConfigurableApplicationContext.class }, context);
+			//
 			prepareContext(context, environment, listeners, applicationArguments,
 					printedBanner);
+			//
 			refreshContext(context);
+			//
 			afterRefresh(context, applicationArguments);
+			//
 			stopWatch.stop();
 			if (this.logStartupInfo) {
 				new StartupInfoLogger(this.mainApplicationClass)
 						.logStarted(getApplicationLog(), stopWatch);
 			}
+			//
 			listeners.started(context);
+			//
 			callRunners(context, applicationArguments);
 		}
 		catch (Throwable ex) {
@@ -382,6 +418,7 @@ public class SpringApplication {
 		}
 
 		try {
+			//
 			listeners.running(context);
 		}
 		catch (Throwable ex) {
@@ -391,13 +428,22 @@ public class SpringApplication {
 		return context;
 	}
 
+	/**
+	 * 准备环境
+	 * @param listeners
+	 * @param applicationArguments
+	 * @return
+	 */
 	private ConfigurableEnvironment prepareEnvironment(
 			SpringApplicationRunListeners listeners,
 			ApplicationArguments applicationArguments) {
-		// Create and configure the environment
+		// Create and configure the environment， 获取应用环境
 		ConfigurableEnvironment environment = getOrCreateEnvironment();
+		//添加命令行参数到环境属性源，配置环境激活配置
 		configureEnvironment(environment, applicationArguments.getSourceArgs());
+		//触发环境准备完毕事件
 		listeners.environmentPrepared(environment);
+		//绑定环境到应用
 		bindToSpringApplication(environment);
 		if (!this.isCustomEnvironment) {
 			environment = new EnvironmentConverter(getClassLoader())
@@ -418,6 +464,13 @@ public class SpringApplication {
 		}
 	}
 
+	/**
+	 * @param context
+	 * @param environment
+	 * @param listeners
+	 * @param applicationArguments
+	 * @param printedBanner
+	 */
 	private void prepareContext(ConfigurableApplicationContext context,
 			ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
 			ApplicationArguments applicationArguments, Banner printedBanner) {
@@ -458,6 +511,9 @@ public class SpringApplication {
 		}
 	}
 
+	/**
+	 * 获取HeadLess系统配置
+	 */
 	private void configureHeadlessProperty() {
 		System.setProperty(SYSTEM_PROPERTY_JAVA_AWT_HEADLESS, System.getProperty(
 				SYSTEM_PROPERTY_JAVA_AWT_HEADLESS, Boolean.toString(this.headless)));
@@ -535,6 +591,10 @@ public class SpringApplication {
 		return instances;
 	}
 
+	/**
+	 * 创建或获取一个应用环境
+	 * @return
+	 */
 	private ConfigurableEnvironment getOrCreateEnvironment() {
 		if (this.environment != null) {
 			return this.environment;
@@ -555,6 +615,7 @@ public class SpringApplication {
 	 * {@link #configureProfiles(ConfigurableEnvironment, String[])} in that order.
 	 * Override this method for complete control over Environment customization, or one of
 	 * the above for fine-grained control over property sources or profiles, respectively.
+	 * 代理configurePropertySources和configureProfiles的代理方法
 	 * @param environment this application's environment
 	 * @param args arguments passed to the {@code run} method
 	 * @see #configureProfiles(ConfigurableEnvironment, String[])
@@ -563,18 +624,22 @@ public class SpringApplication {
 	protected void configureEnvironment(ConfigurableEnvironment environment,
 			String[] args) {
 		if (this.addConversionService) {
+			//配置转换器服务
 			ConversionService conversionService = ApplicationConversionService
 					.getSharedInstance();
 			environment.setConversionService(
 					(ConfigurableConversionService) conversionService);
 		}
+		//添加命令行参数到环境
 		configurePropertySources(environment, args);
+		//配置环境激活配置
 		configureProfiles(environment, args);
 	}
 
 	/**
 	 * Add, remove or re-order any {@link PropertySource}s in this application's
 	 * environment.
+	 * 添加属性源到应用环境
 	 * @param environment this application's environment
 	 * @param args arguments passed to the {@code run} method
 	 * @see #configureEnvironment(ConfigurableEnvironment, String[])
@@ -606,6 +671,7 @@ public class SpringApplication {
 	 * Configure which profiles are active (or active by default) for this application
 	 * environment. Additional profiles may be activated during configuration file
 	 * processing via the {@code spring.profiles.active} property.
+	 * 配置环境激活配置
 	 * @param environment this application's environment
 	 * @param args arguments passed to the {@code run} method
 	 * @see #configureEnvironment(ConfigurableEnvironment, String[])
@@ -619,6 +685,10 @@ public class SpringApplication {
 		environment.setActiveProfiles(StringUtils.toStringArray(profiles));
 	}
 
+	/**
+	 * 配置内省bean忽略属性
+	 * @param environment
+	 */
 	private void configureIgnoreBeanInfo(ConfigurableEnvironment environment) {
 		if (System.getProperty(
 				CachedIntrospectionResults.IGNORE_BEANINFO_PROPERTY_NAME) == null) {
@@ -631,6 +701,7 @@ public class SpringApplication {
 
 	/**
 	 * Bind the environment to the {@link SpringApplication}.
+	 * 绑定环境到应用
 	 * @param environment the environment to bind
 	 */
 	protected void bindToSpringApplication(ConfigurableEnvironment environment) {
@@ -642,6 +713,11 @@ public class SpringApplication {
 		}
 	}
 
+	/**
+	 * 打印应用横幅
+	 * @param environment
+	 * @return
+	 */
 	private Banner printBanner(ConfigurableEnvironment environment) {
 		if (this.bannerMode == Banner.Mode.OFF) {
 			return null;
@@ -660,6 +736,7 @@ public class SpringApplication {
 	 * Strategy method used to create the {@link ApplicationContext}. By default this
 	 * method will respect any explicitly set application context or application context
 	 * class before falling back to a suitable default.
+	 * 创建应用上下文
 	 * @return the application context (not yet refreshed)
 	 * @see #setApplicationContextClass(Class)
 	 */
