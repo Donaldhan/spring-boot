@@ -474,7 +474,9 @@ public class SpringApplication {
 	private void prepareContext(ConfigurableApplicationContext context,
 			ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
 			ApplicationArguments applicationArguments, Banner printedBanner) {
+		//设置上下文的环境配置
 		context.setEnvironment(environment);
+		//在应用上下文初始化完，应用相关后处理操作
 		postProcessApplicationContext(context);
 		applyInitializers(context);
 		listeners.contextPrepared(context);
@@ -768,6 +770,7 @@ public class SpringApplication {
 	/**
 	 * Apply any relevant post processing the {@link ApplicationContext}. Subclasses can
 	 * apply additional processing as required.
+	 * 在应用上下文初始化完，应用相关后处理操作
 	 * @param context the application context
 	 */
 	protected void postProcessApplicationContext(ConfigurableApplicationContext context) {
