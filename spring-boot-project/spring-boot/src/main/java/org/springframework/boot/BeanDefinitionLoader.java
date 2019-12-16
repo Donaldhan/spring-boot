@@ -50,7 +50,7 @@ import org.springframework.util.StringUtils;
  * simple facade over {@link AnnotatedBeanDefinitionReader},
  * {@link XmlBeanDefinitionReader} and {@link ClassPathBeanDefinitionScanner}. See
  * {@link SpringApplication} for the types of sources that are supported.
- *
+ * bean定义加载器
  * @author Phillip Webb
  * @see #setBeanNameGenerator(BeanNameGenerator)
  */
@@ -78,11 +78,14 @@ class BeanDefinitionLoader {
 		Assert.notNull(registry, "Registry must not be null");
 		Assert.notEmpty(sources, "Sources must not be empty");
 		this.sources = sources;
+		//注解beean定义阅读器
 		this.annotatedReader = new AnnotatedBeanDefinitionReader(registry);
+		//XMLbeean定义阅读器
 		this.xmlReader = new XmlBeanDefinitionReader(registry);
 		if (isGroovyPresent()) {
 			this.groovyReader = new GroovyBeanDefinitionReader(registry);
 		}
+		//类路径bean定义扫描器
 		this.scanner = new ClassPathBeanDefinitionScanner(registry);
 		this.scanner.addExcludeFilter(new ClassExcludeFilter(sources));
 	}
@@ -146,6 +149,11 @@ class BeanDefinitionLoader {
 		throw new IllegalArgumentException("Invalid source type " + source.getClass());
 	}
 
+	/**
+	 * 加载bean配置源
+	 * @param source
+	 * @return
+	 */
 	private int load(Class<?> source) {
 		if (isGroovyPresent()
 				&& GroovyBeanDefinitionSource.class.isAssignableFrom(source)) {
@@ -155,6 +163,7 @@ class BeanDefinitionLoader {
 			load(loader);
 		}
 		if (isComponent(source)) {
+			//
 			this.annotatedReader.register(source);
 			return 1;
 		}

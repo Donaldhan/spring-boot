@@ -394,7 +394,7 @@ public class SpringApplication {
 			exceptionReporters = getSpringFactoriesInstances(
 					SpringBootExceptionReporter.class,
 					new Class[] { ConfigurableApplicationContext.class }, context);
-			//
+			//预加载应用上下文
 			prepareContext(context, environment, listeners, applicationArguments,
 					printedBanner);
 			//
@@ -465,6 +465,7 @@ public class SpringApplication {
 	}
 
 	/**
+	 * 预加载应用上下文
 	 * @param context
 	 * @param environment
 	 * @param listeners
@@ -478,7 +479,9 @@ public class SpringApplication {
 		context.setEnvironment(environment);
 		//在应用上下文初始化完，应用相关后处理操作
 		postProcessApplicationContext(context);
+		//应用上下文初始化
 		applyInitializers(context);
+		//应用上下文预监听器
 		listeners.contextPrepared(context);
 		if (this.logStartupInfo) {
 			logStartupInfo(context.getParent() == null);
@@ -486,18 +489,22 @@ public class SpringApplication {
 		}
 		// Add boot specific singleton beans
 		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+		//注册应用参数单例bean
 		beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
 		if (printedBanner != null) {
 			beanFactory.registerSingleton("springBootBanner", printedBanner);
 		}
 		if (beanFactory instanceof DefaultListableBeanFactory) {
+			//配置重写同名bean属性
 			((DefaultListableBeanFactory) beanFactory)
 					.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}
 		// Load the sources
 		Set<Object> sources = getAllSources();
 		Assert.notEmpty(sources, "Sources must not be empty");
+		//
 		load(context, sources.toArray(new Object[0]));
+		//通知监听器，应用上下文已加载
 		listeners.contextLoaded(context);
 	}
 
@@ -796,6 +803,7 @@ public class SpringApplication {
 	}
 
 	/**
+	 * 应用上下文初始化
 	 * Apply any {@link ApplicationContextInitializer}s to the context before it is
 	 * refreshed.
 	 * @param context the configured ApplicationContext (not refreshed yet)
@@ -856,6 +864,7 @@ public class SpringApplication {
 
 	/**
 	 * Load beans into the application context.
+	 * //加载bean到应用上下文
 	 * @param context the context to load beans into
 	 * @param sources the sources to load
 	 */
@@ -864,6 +873,7 @@ public class SpringApplication {
 			logger.debug(
 					"Loading source " + StringUtils.arrayToCommaDelimitedString(sources));
 		}
+		//获取bean定义加载器
 		BeanDefinitionLoader loader = createBeanDefinitionLoader(
 				getBeanDefinitionRegistry(context), sources);
 		if (this.beanNameGenerator != null) {
@@ -875,6 +885,7 @@ public class SpringApplication {
 		if (this.environment != null) {
 			loader.setEnvironment(this.environment);
 		}
+		//加载bean, 并读取注解信息
 		loader.load();
 	}
 
