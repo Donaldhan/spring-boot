@@ -502,7 +502,7 @@ public class SpringApplication {
 		// Load the sources
 		Set<Object> sources = getAllSources();
 		Assert.notEmpty(sources, "Sources must not be empty");
-		//
+		//加载配置元，比如MainApplication
 		load(context, sources.toArray(new Object[0]));
 		//通知监听器，应用上下文已加载
 		listeners.contextLoaded(context);
