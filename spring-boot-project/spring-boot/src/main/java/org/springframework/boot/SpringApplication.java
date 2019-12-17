@@ -397,9 +397,9 @@ public class SpringApplication {
 			//预加载应用上下文
 			prepareContext(context, environment, listeners, applicationArguments,
 					printedBanner);
-			//
+			//刷新应用上下问题
 			refreshContext(context);
-			//
+			//刷新上下文后置操作
 			afterRefresh(context, applicationArguments);
 			//
 			stopWatch.stop();
@@ -407,9 +407,9 @@ public class SpringApplication {
 				new StartupInfoLogger(this.mainApplicationClass)
 						.logStarted(getApplicationLog(), stopWatch);
 			}
-			//
+			//通知监听器，应用上下文启动
 			listeners.started(context);
-			//
+			//执行应用
 			callRunners(context, applicationArguments);
 		}
 		catch (Throwable ex) {
@@ -418,7 +418,7 @@ public class SpringApplication {
 		}
 
 		try {
-			//
+			//通知监听器，应用上下文启动中
 			listeners.running(context);
 		}
 		catch (Throwable ex) {
@@ -508,10 +508,14 @@ public class SpringApplication {
 		listeners.contextLoaded(context);
 	}
 
+	/**
+	 * @param context
+	 */
 	private void refreshContext(ConfigurableApplicationContext context) {
 		refresh(context);
 		if (this.registerShutdownHook) {
 			try {
+				//注册挂钩，在关闭JVM时，应用上下文
 				context.registerShutdownHook();
 			}
 			catch (AccessControlException ex) {
@@ -945,6 +949,7 @@ public class SpringApplication {
 	 */
 	protected void refresh(ApplicationContext applicationContext) {
 		Assert.isInstanceOf(AbstractApplicationContext.class, applicationContext);
+		//刷新应用上下文，比如注册bean工厂，bean后处理器，消息源，事件多播器，及监听器
 		((AbstractApplicationContext) applicationContext).refresh();
 	}
 
@@ -964,9 +969,11 @@ public class SpringApplication {
 		AnnotationAwareOrderComparator.sort(runners);
 		for (Object runner : new LinkedHashSet<>(runners)) {
 			if (runner instanceof ApplicationRunner) {
+				//应用启动方式
 				callRunner((ApplicationRunner) runner, args);
 			}
 			if (runner instanceof CommandLineRunner) {
+				//命令启动方式
 				callRunner((CommandLineRunner) runner, args);
 			}
 		}
@@ -974,6 +981,7 @@ public class SpringApplication {
 
 	private void callRunner(ApplicationRunner runner, ApplicationArguments args) {
 		try {
+			//执行应用
 			(runner).run(args);
 		}
 		catch (Exception ex) {
