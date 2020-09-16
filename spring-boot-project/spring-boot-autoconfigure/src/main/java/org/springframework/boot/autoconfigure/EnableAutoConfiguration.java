@@ -40,9 +40,13 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * have {@code tomcat-embedded.jar} on your classpath you are likely to want a
  * {@link TomcatServletWebServerFactory} (unless you have defined your own
  * {@link ServletWebServerFactory} bean).
+ * 开启Spring应用上下文的自动配置，尝试猜测和配置你需要的bean。自动配置类，通常是基于的classpath和你定义的beans。
+ * 比如，在的classpath下，存在tomcat-embedded.jar， 那么，你想要一个TomcatServletWebServerFactory，
+ * 除非你定义了自己的ServletWebServerFactory
  * <p>
  * When using {@link SpringBootApplication}, the auto-configuration of the context is
  * automatically enabled and adding this annotation has therefore no additional effect.
+ * 当使用SpringBootApplication注解时，上下文的自动配置将会自动开启，所以添加这个注解没有任何用处
  * <p>
  * Auto-configuration tries to be as intelligent as possible and will back-away as you
  * define more of your own configuration. You can always manually {@link #exclude()} any
@@ -50,6 +54,8 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * have access to them). You can also exclude them via the
  * {@code spring.autoconfigure.exclude} property. Auto-configuration is always applied
  * after user-defined beans have been registered.
+ * 自动装配将会直接你定义的配置。你一可以用exclude或excludeName，剔除任何你不想开启的应用。自动装配
+ * bean注册完之后，才会自动配置。
  * <p>
  * The package of the class that is annotated with {@code @EnableAutoConfiguration},
  * usually via {@code @SpringBootApplication}, has specific significance and is often used
@@ -57,12 +63,17 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * It is generally recommended that you place {@code @EnableAutoConfiguration} (if you're
  * not using {@code @SpringBootApplication}) in a root package so that all sub-packages
  * and classes can be searched.
+ * 被EnableAutoConfiguration注解（通常为SpringBootApplication注解）的类包，具体特殊意义，并经常作为默认包。
+ * 比如，当扫描entity注解类是，可以用EnableAutoConfiguration。一般建议，如果在没有使用SpringBootApplication注解的情况下，
+ * 在root包下使用EnableAutoConfiguration，以便所有的子包都可以被搜索到。
  * <p>
  * Auto-configuration classes are regular Spring {@link Configuration} beans. They are
  * located using the {@link SpringFactoriesLoader} mechanism (keyed against this class).
  * Generally auto-configuration beans are {@link Conditional @Conditional} beans (most
  * often using {@link ConditionalOnClass @ConditionalOnClass} and
  * {@link ConditionalOnMissingBean @ConditionalOnMissingBean} annotations).
+ *
+ * 自动装配的类，一般是Spring的配置bean。一般使用SpringFactoriesLoader机制定位。
  *
  * @author Phillip Webb
  * @author Stephane Nicoll

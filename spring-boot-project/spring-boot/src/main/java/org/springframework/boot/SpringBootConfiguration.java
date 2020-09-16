@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
  * {@link Configuration @Configuration}. Can be used as an alternative to the Spring's
  * standard {@code @Configuration} annotation so that configuration can be found
  * automatically (for example in tests).
+ * 预示一个spring boot应用的配置。 可以作为一个spring标准配置的选择，被Configuration注解的配置将会被自动发现。
  * <p>
  * Application should only ever include <em>one</em> {@code @SpringBootConfiguration} and
  * most idiomatic Spring Boot applications will inherit it from
