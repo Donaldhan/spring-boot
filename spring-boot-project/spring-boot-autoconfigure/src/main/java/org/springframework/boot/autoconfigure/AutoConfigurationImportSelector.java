@@ -61,7 +61,7 @@ import org.springframework.util.StringUtils;
  * {@link DeferredImportSelector} to handle {@link EnableAutoConfiguration
  * auto-configuration}. This class can also be subclassed if a custom variant of
  * {@link EnableAutoConfiguration @EnableAutoConfiguration} is needed.
- *
+ * 处理自动配置。
  * @author Phillip Webb
  * @author Andy Wilkinson
  * @author Stephane Nicoll
@@ -105,6 +105,7 @@ public class AutoConfigurationImportSelector
 	/**
 	 * Return the {@link AutoConfigurationEntry} based on the {@link AnnotationMetadata}
 	 * of the importing {@link Configuration @Configuration} class.
+	 * 返回配置注解类
 	 * @param autoConfigurationMetadata the auto-configuration metadata
 	 * @param annotationMetadata the annotation metadata of the configuration class
 	 * @return the auto-configurations that should be imported
@@ -118,11 +119,15 @@ public class AutoConfigurationImportSelector
 		AnnotationAttributes attributes = getAttributes(annotationMetadata);
 		List<String> configurations = getCandidateConfigurations(annotationMetadata,
 				attributes);
+		//提出重复的配置
 		configurations = removeDuplicates(configurations);
+		//提出配置
 		Set<String> exclusions = getExclusions(annotationMetadata, attributes);
 		checkExcludedClasses(configurations, exclusions);
 		configurations.removeAll(exclusions);
+		//过滤配置
 		configurations = filter(configurations, autoConfigurationMetadata);
+		//触发自动配置导入事件
 		fireAutoConfigurationImportEvents(configurations, exclusions);
 		return new AutoConfigurationEntry(configurations, exclusions);
 	}
@@ -178,6 +183,7 @@ public class AutoConfigurationImportSelector
 	 */
 	protected List<String> getCandidateConfigurations(AnnotationMetadata metadata,
 			AnnotationAttributes attributes) {
+		//加载配置工厂类
 		List<String> configurations = SpringFactoriesLoader.loadFactoryNames(
 				getSpringFactoriesLoaderFactoryClass(), getBeanClassLoader());
 		Assert.notEmpty(configurations,
@@ -189,6 +195,7 @@ public class AutoConfigurationImportSelector
 	/**
 	 * Return the class used by {@link SpringFactoriesLoader} to load configuration
 	 * candidates.
+	 * 使用SpringFactoriesLoader加载候选配置
 	 * @return the factory class
 	 */
 	protected Class<?> getSpringFactoriesLoaderFactoryClass() {
@@ -226,6 +233,7 @@ public class AutoConfigurationImportSelector
 
 	/**
 	 * Return any exclusions that limit the candidate configurations.
+	 * 返回提出的候选配置
 	 * @param metadata the source metadata
 	 * @param attributes the {@link #getAttributes(AnnotationMetadata) annotation
 	 * attributes}
@@ -251,6 +259,12 @@ public class AutoConfigurationImportSelector
 		return (excludes != null) ? Arrays.asList(excludes) : Collections.emptyList();
 	}
 
+	/**
+	 * 过滤配置
+	 * @param configurations
+	 * @param autoConfigurationMetadata
+	 * @return
+	 */
 	private List<String> filter(List<String> configurations,
 			AutoConfigurationMetadata autoConfigurationMetadata) {
 		long startTime = System.nanoTime();
@@ -286,6 +300,10 @@ public class AutoConfigurationImportSelector
 		return new ArrayList<>(result);
 	}
 
+	/**
+	 * 加载配置过滤器
+	 * @return
+	 */
 	protected List<AutoConfigurationImportFilter> getAutoConfigurationImportFilters() {
 		return SpringFactoriesLoader.loadFactories(AutoConfigurationImportFilter.class,
 				this.beanClassLoader);
@@ -300,6 +318,11 @@ public class AutoConfigurationImportSelector
 		return Arrays.asList((value != null) ? value : new String[0]);
 	}
 
+	/**
+	 * 触发自动配置导入事件
+	 * @param configurations
+	 * @param exclusions
+	 */
 	private void fireAutoConfigurationImportEvents(List<String> configurations,
 			Set<String> exclusions) {
 		List<AutoConfigurationImportListener> listeners = getAutoConfigurationImportListeners();

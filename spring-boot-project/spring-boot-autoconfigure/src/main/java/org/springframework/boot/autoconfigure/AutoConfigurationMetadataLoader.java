@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Internal utility used to load {@link AutoConfigurationMetadata}.
- *
+ * 加载AutoConfigurationMetadata的内部工具类
  * @author Phillip Webb
  */
 final class AutoConfigurationMetadataLoader {
@@ -43,6 +43,11 @@ final class AutoConfigurationMetadataLoader {
 		return loadMetadata(classLoader, PATH);
 	}
 
+	/**
+	 * @param classLoader
+	 * @param path
+	 * @return
+	 */
 	static AutoConfigurationMetadata loadMetadata(ClassLoader classLoader, String path) {
 		try {
 			Enumeration<URL> urls = (classLoader != null) ? classLoader.getResources(path)
