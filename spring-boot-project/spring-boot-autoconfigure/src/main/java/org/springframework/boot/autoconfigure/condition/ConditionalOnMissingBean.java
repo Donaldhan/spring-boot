@@ -53,7 +53,7 @@ import org.springframework.context.annotation.Conditional;
  * application context so far and, as such, it is strongly recommended to use this
  * condition on auto-configuration classes only. If a candidate bean may be created by
  * another auto-configuration, make sure that the one using this condition runs after.
- *
+ * 当候选的bean没有加载时，加载被此注解，注解的bean
  * @author Phillip Webb
  * @author Andy Wilkinson
  */

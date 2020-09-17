@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Conditional;
 
 /**
  * {@link Conditional} that only matches when the specified classes are on the classpath.
- *
+ * 用于指定，类初始化需要依赖的类，必须先加载
  * @author Phillip Webb
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
