@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
 
 /**
  * {@link BindHandler} that can be used to ignore binding errors.
- *
+ * 忽略绑定错误
  * @author Phillip Webb
  * @author Madhura Bhave
  * @since 2.0.0

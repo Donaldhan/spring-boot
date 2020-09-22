@@ -28,7 +28,7 @@ import org.springframework.util.MultiValueMap;
 
 /**
  * Maintains a mapping of {@link ConfigurationPropertyName} aliases.
- *
+ * 维护配置属性源的别名
  * @author Phillip Webb
  * @author Madhura Bhave
  * @since 2.0.0

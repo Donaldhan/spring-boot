@@ -22,7 +22,9 @@ import org.springframework.core.env.PropertySource;
 /**
  * Strategy used to provide a mapping between a {@link PropertySource} and a
  * {@link ConfigurationPropertySource}.
+ * 用提提供属性源，与配置属性源的映射策略
  * <P>
+ *
  * Mappings should be provided for both {@link ConfigurationPropertyName
  * ConfigurationPropertyName} types and {@code String} based names. This allows the
  * {@link SpringConfigurationPropertySource} to first attempt any direct mappings (i.e.

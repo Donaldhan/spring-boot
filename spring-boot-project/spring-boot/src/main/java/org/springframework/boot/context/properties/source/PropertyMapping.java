@@ -21,7 +21,7 @@ import org.springframework.core.env.PropertySource;
 /**
  * Details a mapping between a {@link PropertySource} item and a
  * {@link ConfigurationPropertySource} item.
- *
+ * 属性源与配置属性源的映射
  * @author Phillip Webb
  * @author Madhura Bhave
  * @see SpringConfigurationPropertySource

@@ -41,6 +41,9 @@ import org.springframework.boot.context.properties.source.IterableConfigurationP
  */
 public class NoUnboundElementsBindHandler extends AbstractBindHandler {
 
+	/**
+	 * 绑定成功的配置属性源
+	 */
 	private final Set<ConfigurationPropertyName> boundNames = new HashSet<>();
 
 	private final Function<ConfigurationPropertySource, Boolean> filter;

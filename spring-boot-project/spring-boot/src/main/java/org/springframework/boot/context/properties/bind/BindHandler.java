@@ -21,7 +21,7 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
 /**
  * Callback interface that can be used to handle additional logic during element
  * {@link Binder binding}.
- *
+ * 处理在元素绑定过程中的另外的逻辑
  * @author Phillip Webb
  * @author Madhura Bhave
  * @since 2.0.0
@@ -37,6 +37,7 @@ public interface BindHandler {
 
 	/**
 	 * Called when binding of an element starts but before any result has been determined.
+	 * 在绑定元素开始时，调用，但是在确定结果之前
 	 * @param <T> the bindable source type
 	 * @param name the name of the element being bound
 	 * @param target the item being bound
@@ -51,6 +52,7 @@ public interface BindHandler {
 	/**
 	 * Called when binding of an element ends with a successful result. Implementations
 	 * may change the ultimately returned result or perform addition validation.
+	 * 在绑定结果成功后调用。 实现可能会改变最终的结果，或者执行额外的验证
 	 * @param name the name of the element being bound
 	 * @param target the item being bound
 	 * @param context the bind context
@@ -66,6 +68,7 @@ public interface BindHandler {
 	 * Called when binding fails for any reason (including failures from
 	 * {@link #onSuccess} calls). Implementations may choose to swallow exceptions and
 	 * return an alternative result.
+	 * 绑定失败时焦勇，包括onSuccess调用的失败，实现可以选择吃掉异常或者返回另一个结果
 	 * @param name the name of the element being bound
 	 * @param target the item being bound
 	 * @param context the bind context
@@ -80,6 +83,7 @@ public interface BindHandler {
 
 	/**
 	 * Called when binding finishes, regardless of whether the property was bound or not.
+	 * 绑定完成调用，无论绑定是否完成
 	 * @param name the name of the element being bound
 	 * @param target the item being bound
 	 * @param context the bind context

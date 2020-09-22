@@ -27,7 +27,7 @@ import org.springframework.util.ObjectUtils;
  * A single configuration property obtained from a {@link ConfigurationPropertySource}
  * consisting of a {@link #getName() name}, {@link #getValue() value} and optional
  * {@link #getOrigin() origin}.
- *
+ * 配置属性
  * @author Phillip Webb
  * @author Madhura Bhave
  * @since 2.0.0

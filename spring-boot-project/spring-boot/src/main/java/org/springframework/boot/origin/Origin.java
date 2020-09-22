@@ -22,6 +22,7 @@ import java.io.File;
  * Interface that uniquely represents the origin of an item. For example, an item loaded
  * from a {@link File} may have an origin made up of the file name along with line/column
  * numbers.
+ * 原始对象接口
  * <p>
  * Implementations must provide sensible {@code hashCode()}, {@code equals(...)} and
  * {@code #toString()} implementations.

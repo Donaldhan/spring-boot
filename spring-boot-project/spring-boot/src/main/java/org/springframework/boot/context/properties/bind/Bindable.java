@@ -30,7 +30,7 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * Source that can be bound by a {@link Binder}.
- *
+ * 可绑定的源对选哪个
  * @param <T> the source type
  * @author Phillip Webb
  * @author Madhura Bhave
@@ -179,6 +179,7 @@ public final class Bindable<T> {
 	/**
 	 * Create a new {@link Bindable} of the type of the specified instance with an
 	 * existing value equal to the instance.
+	 * 创建给定对象实例的可绑定类型
 	 * @param <T> the source type
 	 * @param instance the instance (must not be {@code null})
 	 * @return a {@link Bindable} instance

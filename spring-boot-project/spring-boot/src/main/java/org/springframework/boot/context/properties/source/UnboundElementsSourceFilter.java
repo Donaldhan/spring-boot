@@ -30,7 +30,8 @@ import org.springframework.core.env.StandardEnvironment;
  * when determining unbound elements. If the underlying {@link PropertySource} is a
  * systemEnvironment or systemProperties property source, it will not be considered for
  * unbound element failures.
- *
+ * 用于确定配置属性源是否保存正在确认的没有绑定的元素。如果底层为systemEnvironment或者systemProperties，
+ * 将会不会为没绑定元素的失败情况
  * @author Madhura Bhave
  * @since 2.0.0
  */

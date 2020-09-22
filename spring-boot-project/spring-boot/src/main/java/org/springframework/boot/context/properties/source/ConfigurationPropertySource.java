@@ -22,7 +22,7 @@ import org.springframework.boot.origin.OriginTrackedValue;
 
 /**
  * A source of {@link ConfigurationProperty ConfigurationProperties}.
- *
+ * 配置属性源
  * @author Phillip Webb
  * @author Madhura Bhave
  * @since 2.0.0
@@ -58,6 +58,7 @@ public interface ConfigurationPropertySource {
 	/**
 	 * Return a filtered variant of this source, containing only names that match the
 	 * given {@link Predicate}.
+	 * 返回一个可过滤的配置属性源
 	 * @param filter the filter to match
 	 * @return a filtered {@link ConfigurationPropertySource} instance
 	 */
@@ -68,6 +69,7 @@ public interface ConfigurationPropertySource {
 
 	/**
 	 * Return a variant of this source that supports name aliases.
+	 * 然后支持别名的配置属性源
 	 * @param aliases a function that returns a stream of aliases for any given name
 	 * @return a {@link ConfigurationPropertySource} instance supporting name aliases
 	 */

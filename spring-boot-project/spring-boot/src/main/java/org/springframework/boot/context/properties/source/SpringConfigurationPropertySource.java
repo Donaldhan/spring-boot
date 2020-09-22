@@ -56,8 +56,14 @@ class SpringConfigurationPropertySource implements ConfigurationPropertySource {
 	private static final ConfigurationPropertyName RANDOM = ConfigurationPropertyName
 			.of("random");
 
+	/**
+	 * 属性源
+	 */
 	private final PropertySource<?> propertySource;
 
+	/**
+	 * 属性源映射
+	 */
 	private final PropertyMapper mapper;
 
 	private final Function<ConfigurationPropertyName, ConfigurationPropertyState> containsDescendantOf;
@@ -171,6 +177,11 @@ class SpringConfigurationPropertySource implements ConfigurationPropertySource {
 						+ StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME);
 	}
 
+	/**
+	 * 是否为可枚举的属性源Enumerable
+	 * @param source
+	 * @return
+	 */
 	private static boolean isFullEnumerable(PropertySource<?> source) {
 		PropertySource<?> rootSource = getRootSource(source);
 		if (rootSource.getSource() instanceof Map) {
@@ -212,6 +223,7 @@ class SpringConfigurationPropertySource implements ConfigurationPropertySource {
 	/**
 	 * {@link PropertyMapper} that delegates to other {@link PropertyMapper}s and also
 	 * swallows exceptions when the mapping fails.
+	 * 属性映射代理，映射失败时，将会吃掉异常
 	 */
 	private static class DelegatingPropertyMapper implements PropertyMapper {
 

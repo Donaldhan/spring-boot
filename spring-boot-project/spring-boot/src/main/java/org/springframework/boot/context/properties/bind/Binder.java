@@ -48,7 +48,7 @@ import org.springframework.util.Assert;
 /**
  * A container object which Binds objects from one or more
  * {@link ConfigurationPropertySource ConfigurationPropertySources}.
- *
+ * 从一个或多个配置属性源的容器对选哪个
  * @author Phillip Webb
  * @author Madhura Bhave
  * @since 2.0.0
@@ -66,8 +66,14 @@ public class Binder {
 		BEAN_BINDERS = Collections.unmodifiableList(binders);
 	}
 
+	/**
+	 * 配置属性源
+	 */
 	private final Iterable<ConfigurationPropertySource> sources;
 
+	/**
+	 * 占位符属性解决器
+	 */
 	private final PlaceholdersResolver placeholdersResolver;
 
 	private final ConversionService conversionService;
@@ -94,6 +100,7 @@ public class Binder {
 
 	/**
 	 * Create a new {@link Binder} instance for the specified sources.
+	 * 创建一个给定属性源的绑定器
 	 * @param sources the sources used for binding
 	 * @param placeholdersResolver strategy to resolve any property placeholders
 	 */
@@ -180,6 +187,7 @@ public class Binder {
 	/**
 	 * Bind the specified target {@link Bindable} using this binder's
 	 * {@link ConfigurationPropertySource property sources}.
+	 * 绑定给定对象与绑定器配置属性源的关系
 	 * @param name the configuration property name to bind
 	 * @param target the target bindable
 	 * @param handler the bind handler (may be {@code null})
