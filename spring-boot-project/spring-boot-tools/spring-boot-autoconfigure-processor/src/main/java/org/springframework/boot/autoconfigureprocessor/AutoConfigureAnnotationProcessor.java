@@ -63,10 +63,19 @@ public class AutoConfigureAnnotationProcessor extends AbstractProcessor {
 	protected static final String PROPERTIES_PATH = "META-INF/"
 			+ "spring-autoconfigure-metadata.properties";
 
+	/**
+	 * 注解
+	 */
 	private final Map<String, String> annotations;
 
+	/**
+	 * 注解值
+	 */
 	private final Map<String, ValueExtractor> valueExtractors;
 
+	/**
+	 *
+	 */
 	private final Properties properties = new Properties();
 
 	public AutoConfigureAnnotationProcessor() {
@@ -78,6 +87,9 @@ public class AutoConfigureAnnotationProcessor extends AbstractProcessor {
 		this.valueExtractors = Collections.unmodifiableMap(valueExtractors);
 	}
 
+	/**
+	 * @param annotations
+	 */
 	protected void addAnnotations(Map<String, String> annotations) {
 		annotations.put("Configuration",
 				"org.springframework.context.annotation.Configuration");
@@ -97,6 +109,9 @@ public class AutoConfigureAnnotationProcessor extends AbstractProcessor {
 				"org.springframework.boot.autoconfigure.AutoConfigureOrder");
 	}
 
+	/**
+	 * @param attributes
+	 */
 	private void addValueExtractors(Map<String, ValueExtractor> attributes) {
 		attributes.put("Configuration", ValueExtractor.allFrom("value"));
 		attributes.put("ConditionalOnClass", new OnClassConditionValueExtractor());
@@ -131,6 +146,11 @@ public class AutoConfigureAnnotationProcessor extends AbstractProcessor {
 		return false;
 	}
 
+	/**
+	 * @param roundEnv
+	 * @param propertyKey
+	 * @param annotationName
+	 */
 	private void process(RoundEnvironment roundEnv, String propertyKey,
 			String annotationName) {
 		TypeElement annotationType = this.processingEnv.getElementUtils()
@@ -146,6 +166,11 @@ public class AutoConfigureAnnotationProcessor extends AbstractProcessor {
 		}
 	}
 
+	/**
+	 * @param element
+	 * @param propertyKey
+	 * @param annotationName
+	 */
 	private void processElement(Element element, String propertyKey,
 			String annotationName) {
 		try {
@@ -192,6 +217,9 @@ public class AutoConfigureAnnotationProcessor extends AbstractProcessor {
 		return extractor.getValues(annotation);
 	}
 
+	/**
+	 * @throws IOException
+	 */
 	private void writeProperties() throws IOException {
 		if (!this.properties.isEmpty()) {
 			FileObject file = this.processingEnv.getFiler()
@@ -237,6 +265,9 @@ public class AutoConfigureAnnotationProcessor extends AbstractProcessor {
 
 	}
 
+	/**
+	 *
+	 */
 	private static class NamedValuesExtractor extends AbstractValueExtractor {
 
 		private final Set<String> names;

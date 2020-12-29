@@ -160,15 +160,17 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 			RoundEnvironment roundEnv) {
 		this.metadataCollector.processing(roundEnv);
 		Elements elementUtils = this.processingEnv.getElementUtils();
+		// Is @ConfigurationProperties available
 		TypeElement annotationType = elementUtils
 				.getTypeElement(configurationPropertiesAnnotation());
-		if (annotationType != null) { // Is @ConfigurationProperties available
+		if (annotationType != null) {
 			for (Element element : roundEnv.getElementsAnnotatedWith(annotationType)) {
 				processElement(element);
 			}
 		}
+		// Is @Endpoint available
 		TypeElement endpointType = elementUtils.getTypeElement(endpointAnnotation());
-		if (endpointType != null) { // Is @Endpoint available
+		if (endpointType != null) {
 			getElementsAnnotatedOrMetaAnnotatedWith(roundEnv, endpointType)
 					.forEach(this::processEndpoint);
 		}
@@ -238,6 +240,10 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		}
 	}
 
+	/**
+	 * @param prefix
+	 * @param element
+	 */
 	private void processAnnotatedTypeElement(String prefix, TypeElement element) {
 		String type = this.typeUtils.getQualifiedName(element);
 		this.metadataCollector.add(ItemMetadata.newGroup(prefix, type, type, null));
@@ -268,6 +274,11 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		}
 	}
 
+	/**
+	 * @param prefix
+	 * @param element
+	 * @param source
+	 */
 	private void processTypeElement(String prefix, TypeElement element,
 			ExecutableElement source) {
 		TypeElementMembers members = new TypeElementMembers(this.processingEnv,
@@ -279,6 +290,13 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		processNestedLombokTypes(prefix, element, source, members);
 	}
 
+	/**
+	 * @param prefix
+	 * @param element
+	 * @param source
+	 * @param members
+	 * @param fieldValues
+	 */
 	private void processSimpleTypes(String prefix, TypeElement element,
 			ExecutableElement source, TypeElementMembers members,
 			Map<String, Object> fieldValues) {
@@ -347,6 +365,12 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		});
 	}
 
+	/**
+	 * @param prefix
+	 * @param element
+	 * @param source
+	 * @param members
+	 */
 	private void processNestedTypes(String prefix, TypeElement element,
 			ExecutableElement source, TypeElementMembers members) {
 		members.getPublicGetters().forEach((name, getter) -> {
@@ -356,6 +380,12 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		});
 	}
 
+	/**
+	 * @param prefix
+	 * @param element
+	 * @param source
+	 * @param members
+	 */
 	private void processNestedLombokTypes(String prefix, TypeElement element,
 			ExecutableElement source, TypeElementMembers members) {
 		members.getFields().forEach((name, field) -> {
@@ -407,6 +437,15 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		return (value == null || value.toString().equals(LOMBOK_ACCESS_LEVEL_PUBLIC));
 	}
 
+	/**
+	 * @param prefix
+	 * @param element
+	 * @param source
+	 * @param name
+	 * @param getter
+	 * @param field
+	 * @param returnType
+	 */
 	private void processNestedType(String prefix, TypeElement element,
 			ExecutableElement source, String name, ExecutableElement getter,
 			VariableElement field, TypeMirror returnType) {
@@ -424,6 +463,10 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		}
 	}
 
+	/**
+	 * @param element
+	 * @param annotations
+	 */
 	private void processEndpoint(Element element, List<Element> annotations) {
 		try {
 			String annotationName = this.typeUtils.getQualifiedName(annotations.get(0));
@@ -438,11 +481,16 @@ public class ConfigurationMetadataAnnotationProcessor extends AbstractProcessor 
 		}
 	}
 
+	/**
+	 * @param annotation
+	 * @param element
+	 */
 	private void processEndpoint(AnnotationMirror annotation, TypeElement element) {
 		Map<String, Object> elementValues = getAnnotationElementValues(annotation);
 		String endpointId = (String) elementValues.get("id");
 		if (endpointId == null || "".equals(endpointId)) {
-			return; // Can't process that endpoint
+			// Can't process that endpoint
+			return;
 		}
 		String endpointKey = ItemMetadata.newItemMetadataPrefix("management.endpoint.",
 				endpointId);
